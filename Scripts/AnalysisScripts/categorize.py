@@ -86,12 +86,12 @@ from util import remove_files
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('-k', action="count", help='keep existing files in output folders, default off')
-  parser.add_argument('-d', '--def', nargs = '+', help = "list up to two attributes to define your 'Bitter' stimuli (must list one)", required = True)
+  parser.add_argument('-d', '--define', nargs = '+', help = "list up to two attributes to define your 'Bitter' stimuli (must list one)", required = True)
 
   args = parser.parse_args()
 
   keep_output_files = args.k
-  attribute_list = args.d
+  attribute_list = args.define
 
   if not os.path.exists(output_bitter_path):
     os.makedirs(output_bitter_path)
