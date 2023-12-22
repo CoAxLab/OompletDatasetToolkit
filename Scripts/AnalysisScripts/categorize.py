@@ -91,7 +91,7 @@ if __name__ == '__main__':
   args = parser.parse_args()
 
   keep_output_files = args.k
-  attribute_list = args.define
+  attribute_list = args.d
 
   if not os.path.exists(output_bitter_path):
     os.makedirs(output_bitter_path)
