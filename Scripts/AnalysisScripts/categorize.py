@@ -9,9 +9,68 @@
 
 ### Customizable Parameters
 # Function that, given the labels for a Candy, determines whether this Candy is bitter
-def is_bitter(labels):
-  #return labels["body"]["hue"] == "cold" and labels["pattern"]["type"] != "stripes"
-  return labels["body"]["hue"] == "cold" and labels["eye"]["lash"] != "lash"
+
+spec_dictionary = {
+  'cool_color': ['body','hue','cold'],
+  'warm_color': ['body','hue','warm'],
+
+  'sharp_shape': ['body','shape','sharp'],
+  'mixed_shape': ['body','shape','mixed'],
+  'round_shape': ['body','shape','round'],
+
+  'lash': ['eye','lash','lash'],
+  'nolash': ['eye','lash','nolash'],
+
+  'wide_eyes': ['eye','distance','wide'],
+  'middle_eyes': ['eye','distance','middle'],
+  'narrow_eyes': ['eye','distance','narrow'],
+
+  'short_legs': ['leg','length','short'],
+  'middle_legs': ['leg','length','middle'],
+  'long_legs': ['leg','length','long'],
+
+  'feet_left': ['leg', 'orientation', 'left'],
+  'feet_right': ['leg', 'orientation', 'right'],
+  'feet_in': ['leg', 'orientation', 'inward'],
+  'feet_out': ['leg', 'orientation', 'outward'],
+
+  'open_mouth': ['mouth', 'openness', 'open'],
+  'closed_mouth': ['mouth', 'openness', 'close'],
+
+  'dots_pattern': ['pattern', 'type', 'dots'],
+  'stripes_pattern': ['pattern', 'type', 'stripes'],
+
+  'right_arm_down': ['right_arm', 'orientation', 'down'],
+  'right_arm_up': ['right_arm', 'orientation', 'up'],
+
+  'left_arm_down': ['left_arm', 'orientation', 'down'],
+  'left_arm_up': ['left_arm', 'orientation', 'up']
+}
+
+def is_bitter(labels, list_options):
+  if(len(list_options) == 1):
+    try:
+      specs = spec_dictionary[list_options[0]]
+      return labels[specs[0]][specs[1]] == specs[2]
+    except KeyError:
+      print(f'{list_options[0]} is an incorrect value. Please review the list of options and try again.')
+  elif(len(list_options) == 2):
+    try:
+      specs = spec_dictionary[list_options[0]]
+      specs_two = spec_dictionary[list_options[1]]
+    except KeyError:
+      print(f'{list_options[0]} or {list_options[1]} is an incorrect value. Please review the list of options and try again.')
+    return labels[specs[0]][specs[1]] == specs[2] and labels[specs_two[0]][specs_two[1]] == specs_two[2]
+  else:
+    print(f'Only using first two listed: {list_options[0]} and {list_options[1]}')
+    try:
+      specs = spec_dictionary[list_options[0]]
+      specs_two = spec_dictionary[list_options[1]]
+    except KeyError:
+      print(f'{list_options[0]} or {list_options[1]} is an incorrect value. Please review the list of options and try again.')
+    return labels[specs[0]][specs[1]] == specs[2] and labels[specs_two[0]][specs_two[1]] == specs_two[2]
+  
+
 
 input_path = "../../Data/AnalysisData"
 output_bitter_path = "../../Output/Bitter"
@@ -27,9 +86,12 @@ from util import remove_files
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('-k', action="count", help='keep existing files in output folders, default off')
+  parser.add_argument('-d', '--def', nargs = '+', help = "list up to two attributes to define your 'Bitter' stimuli (must list one)", required = True)
+
   args = parser.parse_args()
 
   keep_output_files = args.k
+  attribute_list = args.define
 
   if not os.path.exists(output_bitter_path):
     os.makedirs(output_bitter_path)
