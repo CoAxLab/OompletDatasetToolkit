@@ -125,7 +125,7 @@ if __name__ == '__main__':
     image_input_filepath = os.path.join(path, image_filename)
 
     # Add to respective folder depending on bitterness categorization
-    if is_bitter(candy_labels):
+    if is_bitter(candy_labels, attribute_list):
       shutil.copy(json_input_filepath, os.path.join(output_bitter_path, json_filename))
       shutil.copy(image_input_filepath, os.path.join(output_bitter_path, image_filename))
     else:
