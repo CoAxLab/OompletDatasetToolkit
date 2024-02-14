@@ -70,7 +70,15 @@ def is_bitter(labels, list_options):
       print(f'{list_options[0]} or {list_options[1]} is an incorrect value. Please review the list of options and try again.')
     return labels[specs[0]][specs[1]] == specs[2] and labels[specs_two[0]][specs_two[1]] == specs_two[2]
   
-
+def isBitterTwo(labels, providedOpts):
+  for option in providedOpts:
+    try:
+      specs = spec_dictionary[option]
+    except KeyError:
+      print(f'{option} is not a valid option. Please revise according to the documentation, and try again!')
+    if labels[specs[0]][specs[1]] != specs[2]:
+      return False
+  return True
 
 input_path = "../../Data/AnalysisData"
 output_bitter_path = "../../Output/Bitter"
