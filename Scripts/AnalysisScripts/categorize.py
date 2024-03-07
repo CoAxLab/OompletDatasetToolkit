@@ -8,18 +8,18 @@
 ##########
 
 ### Customizable Parameters
-# Function that, given the labels for a Candy, determines whether this Candy is bitter
+# Function that, given the attribute specifications, determines whether this Oomplet matches the criteria, and sorts it correctly
 
 spec_dictionary = {
-  'cool_color': ['body','hue','cold'],
-  'warm_color': ['body','hue','warm'],
+  'color_cool': ['body','hue','cold'],
+  'color_warm': ['body','hue','warm'],
 
-  'sharp_shape': ['body','shape','sharp'],
-  'mixed_shape': ['body','shape','mixed'],
-  'round_shape': ['body','shape','round'],
+  'shape_sharp': ['body','shape','sharp'],
+  'shape_mixed': ['body','shape','mixed'],
+  'shape_round': ['body','shape','round'],
 
-  'lash': ['eye','lash','lash'],
-  'nolash': ['eye','lash','nolash'],
+  'lash_yes': ['eye','lash','lash'],
+  'lash_no': ['eye','lash','nolash'],
 
   'wide_eyes': ['eye','distance','wide'],
   'middle_eyes': ['eye','distance','middle'],
@@ -46,43 +46,20 @@ spec_dictionary = {
   'left_arm_down': ['left_arm', 'orientation', 'down'],
   'left_arm_up': ['left_arm', 'orientation', 'up']
 }
-
-def is_bitter(labels, list_options):
-  if(len(list_options) == 1):
-    try:
-      specs = spec_dictionary[list_options[0]]
-      return labels[specs[0]][specs[1]] == specs[2]
-    except KeyError:
-      print(f'{list_options[0]} is an incorrect value. Please review the list of options and try again.')
-  elif(len(list_options) == 2):
-    try:
-      specs = spec_dictionary[list_options[0]]
-      specs_two = spec_dictionary[list_options[1]]
-    except KeyError:
-      print(f'{list_options[0]} or {list_options[1]} is an incorrect value. Please review the list of options and try again.')
-    return labels[specs[0]][specs[1]] == specs[2] and labels[specs_two[0]][specs_two[1]] == specs_two[2]
-  else:
-    print(f'Only using first two listed: {list_options[0]} and {list_options[1]}')
-    try:
-      specs = spec_dictionary[list_options[0]]
-      specs_two = spec_dictionary[list_options[1]]
-    except KeyError:
-      print(f'{list_options[0]} or {list_options[1]} is an incorrect value. Please review the list of options and try again.')
-    return labels[specs[0]][specs[1]] == specs[2] and labels[specs_two[0]][specs_two[1]] == specs_two[2]
   
-def isBitterTwo(labels, providedOpts):
+def isMatch(labels, providedOpts, lookForAny):
   for option in providedOpts:
     try:
       specs = spec_dictionary[option]
     except KeyError:
       print(f'{option} is not a valid option. Please revise according to the documentation, and try again!')
-    if labels[specs[0]][specs[1]] != specs[2]:
+    if not lookForAny and labels[specs[0]][specs[1]] != specs[2]:
       return False
-  return True
+    elif lookForAny and labels[specs[0]][specs[1]] == specs[2]:
+      return True
+  return not lookForAny
 
-input_path = "../../Data/AnalysisData"
-output_bitter_path = "../../Output/Bitter"
-output_sweet_path = "../../Output/Sweet"
+
 ### End of Customizable Parameters
 
 import argparse
@@ -91,19 +68,28 @@ import os
 import shutil
 from util import remove_files
 
+basePath = os.path.dirname(os.path.dirname(os.getcwd()))
+
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('-k', action="count", help='keep existing files in output folders, default off')
-  parser.add_argument('-d', '--define', nargs = '+', help = "list up to two attributes to define your 'Bitter' stimuli (must list one)", required = True)
-
+  parser.add_argument('-i', '--input', default='Oomplets', help='name of the directory from which Oomplets will be sorted')
+  parser.add_argument('-d', '--define', nargs = '+', help = "list attributes to define which Oomplets are a Match (must list one)", required = True)
+  parser.add_argument('-a', '--any', action="store_true", help= 'indicates that Oomplets with ANY of defining attributes will be placed in the Match group')
+  
   args = parser.parse_args()
 
   keep_output_files = args.k
+  inDirectory = args.input
   attribute_list = args.define
+  searchForAny = args.any
+
+  input_path = os.path.join(basePath, 'Output', inDirectory)
+  output_bitter_path = os.path.join(basePath, 'Output', 'Match')
+  output_sweet_path = os.path.join(basePath, 'Output', 'NoMatch')
 
   if not os.path.exists(output_bitter_path):
     os.makedirs(output_bitter_path)
-
   if not os.path.exists(output_sweet_path):
     os.makedirs(output_sweet_path)
 
@@ -133,7 +119,7 @@ if __name__ == '__main__':
     image_input_filepath = os.path.join(path, image_filename)
 
     # Add to respective folder depending on bitterness categorization
-    if is_bitter(candy_labels, attribute_list):
+    if isMatch(candy_labels, attribute_list, searchForAny):
       shutil.copy(json_input_filepath, os.path.join(output_bitter_path, json_filename))
       shutil.copy(image_input_filepath, os.path.join(output_bitter_path, image_filename))
     else:
