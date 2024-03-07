@@ -6,7 +6,15 @@
 # This script and all related assets fall under the CC BY-NC-SA 4.0 License
 # All future derivations of this code should contain the above attribution
 ##########
-
+import argparse
+import json
+import os
+import time
+import numpy as np
+import cv2 as cv
+import multiprocessing as mp
+from util import remove_files
+from multiprocessing import Pool
 ### Customizable Parameters
 # Path to directory for each component
 left_arm_path = "../../Data/InputData/Left_Arms_2x(280x280)"
@@ -41,20 +49,12 @@ all_pos = [left_arm_pos, right_arm_pos, body_pos, eye_pos, leg_pos, mouth_pos, p
 
 # Dimensions of output image in (y, x, # channels)
 output_size = (1400, 1312, 4)
-output_path = "../../Data/AnalysisData"
+basePath = os.path.dirname(os.path.dirname(os.getcwd()))
+output_path = os.path.join(basePath, 'Output', 'Oomplets')
 ### End of Customizable Parameters
 
 ### Start of main functionality
-import argparse
-import json
-import os
-import time
 
-import numpy as np
-import cv2 as cv
-import multiprocessing as mp
-from util import remove_files
-from multiprocessing import Pool
 
 ## Helper Functions
 def get_indices(image_pos, image_size):
