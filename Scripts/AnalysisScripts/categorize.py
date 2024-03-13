@@ -67,6 +67,7 @@ import json
 import os
 import shutil
 from util import remove_files
+import datetime
 
 basePath = os.path.dirname(os.path.dirname(os.getcwd()))
 
@@ -74,7 +75,7 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('-k', action="count", help='keep existing files in output folders, default off')
   parser.add_argument('-i', '--input', default='Oomplets', help='name of the directory from which Oomplets will be sorted')
-  parser.add_argument('-d', '--define', nargs = '+', help = "list attributes to define which Oomplets are a Match (must list one)", required = True)
+  parser.add_argument('-d', '--define', nargs = '+', help = "list attributes to define which Oomplets are a Match (must list one), separated using space", required = True)
   parser.add_argument('-a', '--any', action="store_true", help= 'indicates that Oomplets with ANY of defining attributes will be placed in the Match group')
   
   args = parser.parse_args()
@@ -84,9 +85,11 @@ if __name__ == '__main__':
   attribute_list = args.define
   searchForAny = args.any
 
+  ts = datetime.datetime.now()
+
   input_path = os.path.join(basePath, 'Output', inDirectory)
-  output_bitter_path = os.path.join(basePath, 'Output', 'Match')
-  output_sweet_path = os.path.join(basePath, 'Output', 'NoMatch')
+  output_bitter_path = os.path.join(basePath, 'Output', f'Match_{str(ts.hour)}-{str(ts.minute)}-{str(ts.second)}-{str(ts.microsecond)}')
+  output_sweet_path = os.path.join(basePath, 'Output', f'NoMatch_{str(ts.hour)}-{str(ts.minute)}-{str(ts.second)}-{str(ts.microsecond)}')
 
   if not os.path.exists(output_bitter_path):
     os.makedirs(output_bitter_path)
