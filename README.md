@@ -46,3 +46,16 @@ options:
   -i, --input name of the directory from which Oomplets will be sorted (default: Oomplets)
   -a, --any   flags Oomplets with ANY of the given defining attributes as 'Match' (default: off, must have ALL attributes)
 ```
+
+Valid attribute options are as follows. Must be typed exactly as shown.
+```
+  'color_cool', 'color_warm',
+  'shape_sharp', 'shape_mixed', 'shape_round',
+  'lash_yes', 'lash_no',
+  'wide_eyes', 'middle_eyes', 'narrow_eyes',
+  'short_legs', 'middle_legs', 'long_legs',
+  'feet_left', 'feet_right', 'feet_in', 'feet_out',
+  'open_mouth', 'closed_mouth',
+  'dots_pattern', 'stripes_pattern',
+  'right_arm_down', 'right_arm_up', 'left_arm_down', 'left_arm_up'
+```
