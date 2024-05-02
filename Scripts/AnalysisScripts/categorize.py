@@ -75,7 +75,7 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('-k', action="count", help='keep existing files in output folders, default off')
   parser.add_argument('-i', '--input', default='Oomplets', help='name of the directory from which Oomplets will be sorted')
-  parser.add_argument('-d', '--define', nargs = '+', help = "list attributes to define which Oomplets are a Match (must list one), separated using space", required = True)
+  parser.add_argument('-d', '--def', nargs = '+', help = "list attributes to define which Oomplets are a Match (must list one), separated using space", required = True)
   parser.add_argument('-a', '--any', action="store_true", help= 'indicates that Oomplets with ANY of defining attributes will be placed in the Match group')
   
   args = parser.parse_args()
