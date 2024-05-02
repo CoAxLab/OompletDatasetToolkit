@@ -41,5 +41,8 @@ usage: python categorize.py [-h] [-k]
 
 options:
   -h, --help  show this help message and exit
+  -d, --def   define your 'Match' criteria
   -k          keep existing files in output folders, default off
+  -i, --input name of the directory from which Oomplets will be sorted (default: Oomplets)
+  -a, --any   flags Oomplets with ANY of the given defining attributes as 'Match' (default: off, must have ALL attributes)
 ```
