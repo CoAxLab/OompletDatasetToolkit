@@ -1,7 +1,5 @@
-# Python-Based Candy Generation Scripts and Assets
-This repository contains scripts and initial assets for Candy Generation + Bitter/Sweet classifications.
-These assets were designed to be used in conjunction with the BitterBuster game; however, they can 
-also be used for general visual classification studies and tasks.
+# Python-Based Stimulus Generation Scripts and Assets
+This repository contains scripts and initial assets for Oomplet Stimulus Generation + Match/NoMatch classifications.
 
 ## Attribution
 Originally Developed by Team HAI Fall 2022
@@ -27,12 +25,12 @@ usage: python generate.py [-h] [-n N] [-p] [-c C] [-v] [-k] [-s S]
 
 options:
   -h, --help  show this help message and exit
-  -n N        number of candies to generate N, by default will generate all possible combinations
+  -n N        number of oomplets to generate N, by default will generate all possible combinations
   -p          multiprocessing flag, default off
   -c C        max number of processes to spawn if multiprocessing, default 4
   -v          verbose, default off
   -k          keep existing files in output folder, default off
-  -s S        seed value for randomly generated candies, default 0
+  -s S        seed value for randomly generated oomplets, default 0
 ```
 
 ## Categorize Candies

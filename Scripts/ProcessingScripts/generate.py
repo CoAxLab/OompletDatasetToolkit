@@ -185,7 +185,7 @@ def generate_candy(i):
   mouth_comp_labels = draw_component(img, mouths[mouth_index], mouth_pos)
 
   # Write image png file
-  filename = f"candy_{str(i)}"
+  filename = f"oomplet_{str(i)}"
   image_filename = f"{filename}.png"
   image_path = os.path.join(output_path, image_filename)
   cv.imwrite(image_path, img)
@@ -210,7 +210,7 @@ def generate_candy(i):
 
   if verbose:
     toc = time.perf_counter()
-    print(f"Created candy_{i} in {toc - tic:0.4f} seconds")
+    print(f"Created oomplet_{i} in {toc - tic:0.4f} seconds")
 
 def load_components():
   """
@@ -257,12 +257,12 @@ def load_components():
 
 # Parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('-n', type=int, help='number of candies to generate')
+parser.add_argument('-n', type=int, help='number of oomplets to generate')
 parser.add_argument('-p', action="count", help='multiprocessing flag, default off')
 parser.add_argument('-c', type=int, help='max number of processes to spawn if multiprocessing, default 4', default=4)
 parser.add_argument('-v', action="count", help='verbose, default off')
 parser.add_argument('-k', action="count", help='keep existing files in output folder, default off')
-parser.add_argument('-s', type=int, help='seed value for randomly generated candies', default=0)
+parser.add_argument('-s', type=int, help='seed value for randomly generated oomplets', default=0)
 args = parser.parse_args()
 
 # Load all components
@@ -311,4 +311,4 @@ if __name__ == '__main__':
       generate_candy(i)
 
   overall_toc = time.perf_counter()
-  print(f"Generated {num_candies} candies in {overall_toc - overall_tic:0.4f} seconds")
+  print(f"Generated {num_candies} oomplets in {overall_toc - overall_tic:0.4f} seconds")
