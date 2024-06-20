@@ -75,34 +75,65 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('-k', action="count", help='keep existing files in output folders, default off')
   parser.add_argument('-i', '--input', default='Oomplets', help='name of the directory from which Oomplets will be sorted')
-  parser.add_argument('-d', '--def', nargs = '+', help = "list attributes to define which Oomplets are a Match (must list one), separated using space", required = True)
+  parser.add_argument('-m', '--match', default = None, help = 'name of directory that will contain Oomplets that meet criteria')
+  parser.add_argument('-n', '--nomatch', default = None, help = 'name of directory that will contain Oomplets that do NOT meet criteria')
+  parser.add_argument('-d', '--define', nargs = '+', help = "list attributes to define which Oomplets are a Match (must list one), separated using space", required = True)
   parser.add_argument('-a', '--any', action="store_true", help= 'indicates that Oomplets with ANY of defining attributes will be placed in the Match group')
+  parser.add_argument('-v', action="count", help='verbose, default off')
   
   args = parser.parse_args()
 
   keep_output_files = args.k
   inDirectory = args.input
+  matchDir = args.match
+  nomatchDir = args.nomatch
   attribute_list = args.define
   searchForAny = args.any
+  verbose = args.v
 
   ts = datetime.datetime.now()
 
   input_path = os.path.join(basePath, 'Output', inDirectory)
-  output_bitter_path = os.path.join(basePath, 'Output', f'Match_{str(ts.hour)}-{str(ts.minute)}-{str(ts.second)}-{str(ts.microsecond)}')
-  output_sweet_path = os.path.join(basePath, 'Output', f'NoMatch_{str(ts.hour)}-{str(ts.minute)}-{str(ts.second)}-{str(ts.microsecond)}')
+  if matchDir == None:
+    matchExtension = f'Match_{str(ts.hour)}-{str(ts.minute)}-{str(ts.second)}-{str(ts.microsecond)}'
+  else:
+    matchExtension = matchDir
+  outputMatchPath = os.path.join(basePath, 'Output', matchExtension)
 
-  if not os.path.exists(output_bitter_path):
-    os.makedirs(output_bitter_path)
-  if not os.path.exists(output_sweet_path):
-    os.makedirs(output_sweet_path)
+  if nomatchDir == None:  
+    nomatchExtension = f'NoMatch_{str(ts.hour)}-{str(ts.minute)}-{str(ts.second)}-{str(ts.microsecond)}'
+  else:
+    nomatchExtension = nomatchDir
+  outputNoMatchPath = os.path.join(basePath, 'Output', nomatchExtension)
 
-  # Have a flag for clearing all files in output folders
-  if not keep_output_files:
-    remove_files(output_bitter_path)
-    remove_files(output_sweet_path)
+  if verbose:
+    print(f'Using match directory "{matchExtension}" and nomatch directory "{nomatchExtension}"')
+
+  # Make Match directory and remove existing files if flagged
+  if not os.path.exists(outputMatchPath):
+    os.makedirs(outputMatchPath)
+    if verbose:
+      print(f'Directory: "{outputMatchPath}" created')
+  elif not keep_output_files:
+    remove_files(outputMatchPath)
+    if verbose:
+      print(f'Existing files have been removed from the following directory: {matchExtension}')
+
+  # Make NoMatch directory and remove existing files if flagged
+  if not os.path.exists(outputNoMatchPath):
+    os.makedirs(outputNoMatchPath)
+    if verbose:
+      print(f'Directory: "{outputNoMatchPath}" created')
+  elif not keep_output_files:
+    remove_files(outputNoMatchPath)
+    if verbose:
+      print(f'Existing files have been removed from the following directory: {nomatchExtension}')
 
   # Categorize all input files
   path = input_path
+  if verbose:
+    print(f'Begin copying files from:\n{input_path}\nto\n{outputMatchPath} and {outputNoMatchPath}')
+
   for filename in os.listdir(path):
     f = os.path.join(path, filename)
 
@@ -121,10 +152,12 @@ if __name__ == '__main__':
     image_filename = candy_labels["image_filename"]
     image_input_filepath = os.path.join(path, image_filename)
 
-    # Add to respective folder depending on bitterness categorization
+    # Add to respective folder depending on attribute categorization
     if isMatch(candy_labels, attribute_list, searchForAny):
-      shutil.copy(json_input_filepath, os.path.join(output_bitter_path, json_filename))
-      shutil.copy(image_input_filepath, os.path.join(output_bitter_path, image_filename))
+      shutil.copy(json_input_filepath, os.path.join(outputMatchPath, json_filename))
+      shutil.copy(image_input_filepath, os.path.join(outputMatchPath, image_filename))
     else:
-      shutil.copy(json_input_filepath, os.path.join(output_sweet_path, json_filename))
-      shutil.copy(image_input_filepath, os.path.join(output_sweet_path, image_filename))
+      shutil.copy(json_input_filepath, os.path.join(outputNoMatchPath, json_filename))
+      shutil.copy(image_input_filepath, os.path.join(outputNoMatchPath, image_filename))
+  if verbose:
+    print(f'Categorization complete!')
